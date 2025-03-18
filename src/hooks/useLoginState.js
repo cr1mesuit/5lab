@@ -5,12 +5,18 @@ const useLoginState = () => {
         return localStorage.getItem("isLoggedIn") === "true";
     });
 
+    const [username, setUsername] = useState(() => {
+        return localStorage.getItem("username") || "";
+    });
+
     useEffect(() => {
         localStorage.setItem("isLoggedIn", isLoggedIn);
-    }, [isLoggedIn]);
+        localStorage.setItem("username", username);
+    }, [isLoggedIn, username]);
 
-    const login = (username, password) => {
-        if (username === "admin" && password === "admin") {
+    const login = (enteredUsername, password) => {
+        if (enteredUsername === "admin" && password === "admin") {
+            setUsername(enteredUsername);
             setIsLoggedIn(true);
             alert('logged in!');
             window.location.reload()
@@ -21,10 +27,11 @@ const useLoginState = () => {
 
     const logout = () => {
         setIsLoggedIn(false);
+        setUsername(undefined);
         window.location.reload()
     };
 
-    return { isLoggedIn, login, logout };
+    return { isLoggedIn, login, logout, username };
 };
 
 export default useLoginState;
